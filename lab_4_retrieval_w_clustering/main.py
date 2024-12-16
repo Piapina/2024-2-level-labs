@@ -73,12 +73,6 @@ class BM25Vectorizer(Vectorizer):
         self._corpus = tokenized_corpus
         self._avg_doc_len = sum(len(doc) for doc in self._corpus) / len(self._corpus)
 
-        if not isinstance(tokenized_corpus, list) or not tokenized_corpus:
-            raise ValueError('Inappropriate type input argument or input argument is empty')
-
-        self._corpus = tokenized_corpus
-        self._avg_doc_len = sum(len(paragraph) for paragraph in self._corpus) / len(self._corpus)
-
     def vectorize(self, tokenized_document: list[str]) -> Vector:
         """
         Create a vector for tokenized document.
@@ -129,16 +123,6 @@ class BM25Vectorizer(Vectorizer):
             if not vec_ind == -1:
                 vector_to_fill[vec_ind] = bm25[word]
         return tuple(vector_to_fill)
-
-        if not isinstance(tokenized_document, list) or not tokenized_document:
-            raise ValueError('inappropriate type input argument or input argument is empty')
-
-        vector_bm25 = [0.0] * len(self._vocabulary)
-        bm25 = calculate_bm25(self._vocabulary, tokenized_document, self._idf_values,
-                              avg_doc_len=self._avg_doc_len, doc_len=len(tokenized_document))
-        for index, token in enumerate(self._vocabulary):
-            vector_bm25[index] = bm25[token]
-        return tuple(vector_bm25)
 
 
 class DocumentVectorDB:
